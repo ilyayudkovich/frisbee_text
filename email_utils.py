@@ -54,15 +54,5 @@ def checkBadEmail(raw_string):
 	# badSubject = 'Delivery Status Notification (Failure)'
 	subject = getSubject(raw_string)
 	sender = getSender(raw_string)
-	print sender
 	return sender == badSender
 
-def main():
-
-	mail = getInbox()
-	msg, mid = getLastestEmail(mail)
-	mail.close()
-	mail.logout()
-
-if __name__ == '__main__':
-	main()
