@@ -43,7 +43,7 @@ def main():
 
 	body = generateMsg()
 	print body
-	server.sendmail(user, '6178165518@txt.att.net' , body)
+	server.sendmail(user, '@txt.att.net' , body)
 	if not lastSendIsGood():
 		# Shove logic to try another carrier here
 		pass
