@@ -3,8 +3,36 @@ import os
 import sys
 import smtplib
 import pywapi
+import time
 from weather import getCurrentConditions
 from email_utils import lastSendIsGood
+from utilities import getLogin
+
+def getNumbers():
+	numbers = []
+	with open('./numbers', 'r') as f:
+		for x in f:
+			x = x.rstrip()
+			if x:
+				numbers.append(x)
+	f.close()
+	return numbers
+
+def writeToContacts(phone, carrier):
+	with open('./contacts', 'a+') as f:
+		contact = phone + '@' + carrier + '\n'
+		print 'Adding contact ', contact, 'to contacts file'
+		f.write(contact)
+	f.close()
+
+def numInContacts(phone):
+	return phone in open('./contacts').read()
+
+def getContact(phone):
+	with open('./contacts', 'r') as f:
+		for line in f:
+			if phone in line:
+				return line
 
 def generateMsg():
 	result = getCurrentConditions('02115')
@@ -16,33 +44,34 @@ def generateMsg():
 	message = message + temp + wind_s
 	msg = """From: Northeastern Ultimate\nSubject: Practice\n%s""" % message
 
-	print msg
 	return msg
 
 def main():
 	server = smtplib.SMTP("smtp.gmail.com", 587)
 	server.starttls()
-	numbers = []
-	nem = {'att':'txt.att.net',
-			'tmobile':'tmomail.net',
-			'verizon':'vtext.com',
-			'sprint':'messaging.sprintpcs.com'}
-	with open('./numbers', 'r') as f:
-		for x in f:
-			x = x.rstrip()
-			if x:
-				numbers.append(x)
+	nem = ['txt.att.net',
+			'tmomail.net',
+			'vtext.com',
+			'messaging.sprintpcs.com']
+
+	numbers = getNumbers()
 	user, pw = getLogin()
 	server.login(user, pw)
-
 	body = generateMsg()
-	print body
-	server.sendmail(user, '@txt.att.net' , body)
-	if not lastSendIsGood():
-		# Shove logic to try another carrier here
-		pass
-
-	print "message sent"
+	for n in numbers:
+		if numInContacts(n):
+			print 'have correct contact info'
+			server.sendmail(user, getContact(n), body)
+			print 'message sent'
+		else:
+			i = 0
+			server.sendmail(user, n + '@' + nem[i], body)
+			time.sleep(5)
+			while not lastSendIsGood() and i < 4:
+				server.sendmail(user,n + '@' + nem[i], body)
+				time.sleep(5)
+				i += 1
+			writeToContacts(n, nem[i])
 	server.quit()
 
 

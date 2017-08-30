@@ -50,19 +50,17 @@ def lastSendIsGood():
 		return False
 
 def checkBadEmail(raw_string):
-	badSender = 'mailer-daemon@googlemail.com'
-	badSubject = 'Delivery Status Notification (Failure)'
+	badSender = 'Mail Delivery Subsystem <mailer-daemon@googlemail.com>'
+	# badSubject = 'Delivery Status Notification (Failure)'
 	subject = getSubject(raw_string)
 	sender = getSender(raw_string)
-	return sender == badSender and badSubject == subject
+	print sender
+	return sender == badSender
 
 def main():
 
 	mail = getInbox()
 	msg, mid = getLastestEmail(mail)
-	if msg:
-		print mid
-		print msg
 	mail.close()
 	mail.logout()
 
