@@ -4,6 +4,6 @@ send messages via the email that is setup in the login
 file. There is currently no formatting for numbers yet
 so each line in the numbers file should be 10 digits
 followed by a new line. The login file contains two lines
-<email address>\n
+<email address>
 <password>
 
