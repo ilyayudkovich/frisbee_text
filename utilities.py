@@ -4,6 +4,9 @@ def getLogin():
 		pw    = f.readline()
 		return (email, pw)
 
+def formatPhoneNumber(phone):
+	pass
+
 def parseMessage():
 	pass
 
