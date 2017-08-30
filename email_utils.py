@@ -3,7 +3,7 @@
 import imaplib
 import time
 import email
-from test_numbers import getLogin
+from utilities import getLogin
 
 def getInbox():
 	user, pw = getLogin()

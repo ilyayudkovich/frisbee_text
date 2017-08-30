@@ -4,13 +4,7 @@ import sys
 import smtplib
 import pywapi
 from weather import getCurrentConditions
-from email import lastSendIsGood
-
-def getLogin():
-	with open('./login', 'r') as f:
-		email = f.readline()
-		pw    = f.readline()
-		return (email, pw)
+from email_utils import lastSendIsGood
 
 def generateMsg():
 	result = getCurrentConditions('02115')
@@ -50,10 +44,6 @@ def main():
 
 	print "message sent"
 	server.quit()
-
-
-
-
 
 
 if __name__ == '__main__':
