@@ -67,7 +67,7 @@ def main():
 			i = 0
 			server.sendmail(user, n + '@' + nem[i], body)
 			time.sleep(5)
-			while not lastSendIsGood() and i < 4:
+			while not lastSendIsGood() and i < len(nem):
 				server.sendmail(user,n + '@' + nem[i], body)
 				time.sleep(5)
 				i += 1
