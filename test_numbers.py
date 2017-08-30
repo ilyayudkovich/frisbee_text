@@ -10,7 +10,7 @@ from utilities import getLogin
 
 def getNumbers():
 	numbers = []
-	with open('./numbers', 'r') as f:
+	with open('./docs/numbers', 'r') as f:
 		for x in f:
 			x = x.rstrip()
 			if x:
@@ -19,17 +19,17 @@ def getNumbers():
 	return numbers
 
 def writeToContacts(phone, carrier):
-	with open('./contacts', 'a+') as f:
+	with open('./docs/contacts', 'a+') as f:
 		contact = phone + '@' + carrier + '\n'
 		print 'Adding contact ', contact, 'to contacts file'
 		f.write(contact)
 	f.close()
 
 def numInContacts(phone):
-	return phone in open('./contacts').read()
+	return phone in open('./docs/contacts').read()
 
 def getContact(phone):
-	with open('./contacts', 'r') as f:
+	with open('./docs/contacts', 'r') as f:
 		for line in f:
 			if phone in line:
 				return line

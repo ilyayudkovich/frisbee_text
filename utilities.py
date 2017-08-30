@@ -1,5 +1,5 @@
 def getLogin():
-	with open('./login', 'r') as f:
+	with open('./docs/login', 'r') as f:
 		email = f.readline()
 		pw    = f.readline()
 		return (email, pw)
