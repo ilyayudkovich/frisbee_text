@@ -4,8 +4,6 @@ import pywapi
 
 def getCurrentWTC(postal):
 	result = getCurrentConditions(postal)
-	# postal = str(postal)
-	# result = pywapi.get_weather_from_weather_com(postal)['current_conditions']
 	wind = result['wind']['speed']
 	temp =  result['temperature']
 	clouds = result['text']
@@ -16,4 +14,7 @@ def getCurrentConditions(postal):
 	return pywapi.get_weather_from_weather_com(postal)['current_conditions']
 
 def celToF(celcius):
-	pass
+	return celcius * 9/5 + 32
+
+def kiloToMil(km):
+	return km / .6
