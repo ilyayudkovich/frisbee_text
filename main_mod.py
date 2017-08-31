@@ -4,9 +4,9 @@ import sys
 import smtplib
 import pywapi
 import time
-from weather import getCurrentConditions
+from weather import getCurrentConditions, getCurrentWTC
 from email_utils import lastSendIsGood
-from utilities import getLogin
+from utilities import getLogin, carrierMap
 
 def getNumbers():
 	numbers = []
@@ -18,9 +18,9 @@ def getNumbers():
 	f.close()
 	return numbers
 
-def writeToContacts(phone, carrier):
+def writeToContacts(phone, carrierMap):
 	with open('./docs/contacts', 'a+') as f:
-		contact = phone + '@' + carrier + '\n'
+		contact = phone + '@' + carrierMap + '\n'
 		print 'Adding contact ', contact, 'to contacts file'
 		f.write(contact)
 	f.close()
@@ -35,13 +35,12 @@ def getContact(phone):
 				return line
 
 def generateMsg():
-	result = getCurrentConditions('02115')
-	wind_s = result['wind']['speed'] + 'mph\n'
-	wind_s = "The wind speed is " + wind_s
-	temp = result['temperature'] + 'C\n'
-	temp = "The temperature will be " + temp
-	message = "Reminder you have practice tonight\n"
-	message = message + temp + wind_s
+	wind, temp, clouds = getCurrentWTC('02115')
+	wind = "The wind speed is " + wind + "Km/h\n";
+	temp = "The temperature will be " + temp + "deg C\n"
+	clouds = "Heres what the sky looks like: " + clouds + "\n"
+	message = "Reminder you have practice tonight @ 7pm\n"
+	message = message + temp + wind + clouds
 	msg = """From: Northeastern Ultimate\nSubject: Practice\n%s""" % message
 
 	return msg
@@ -49,29 +48,25 @@ def generateMsg():
 def main():
 	server = smtplib.SMTP("smtp.gmail.com", 587)
 	server.starttls()
-	nem = ['txt.att.net',
-			'tmomail.net',
-			'vtext.com',
-			'messaging.sprintpcs.com']
-
 	numbers = getNumbers()
 	user, pw = getLogin()
 	server.login(user, pw)
 	body = generateMsg()
+
 	for n in numbers:
 		if numInContacts(n):
-			print 'have correct contact info'
+			print 'have correct contact info for', n
 			server.sendmail(user, getContact(n), body)
 			print 'message sent'
 		else:
 			i = 0
-			server.sendmail(user, n + '@' + nem[i], body)
+			server.sendmail(user, n + '@' + carrierMap[i], body)
 			time.sleep(5)
-			while not lastSendIsGood() and i < 4:
-				server.sendmail(user,n + '@' + nem[i], body)
+			while not lastSendIsGood() and i < len(carrierMap):
+				server.sendmail(user,n + '@' + carrierMap[i], body)
 				time.sleep(5)
 				i += 1
-			writeToContacts(n, nem[i])
+			writeToContacts(n, carrierMap[i])
 	server.quit()
 
 
