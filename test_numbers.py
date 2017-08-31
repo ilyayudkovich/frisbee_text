@@ -6,7 +6,7 @@ import pywapi
 import time
 from weather import getCurrentConditions
 from email_utils import lastSendIsGood
-from utilities import getLogin
+from utilities import getLogin, carrierMap
 
 def getNumbers():
 	numbers = []
@@ -18,9 +18,9 @@ def getNumbers():
 	f.close()
 	return numbers
 
-def writeToContacts(phone, carrier):
+def writeToContacts(phone, carrierMap):
 	with open('./docs/contacts', 'a+') as f:
-		contact = phone + '@' + carrier + '\n'
+		contact = phone + '@' + carrierMap + '\n'
 		print 'Adding contact ', contact, 'to contacts file'
 		f.write(contact)
 	f.close()
@@ -49,29 +49,24 @@ def generateMsg():
 def main():
 	server = smtplib.SMTP("smtp.gmail.com", 587)
 	server.starttls()
-	nem = ['txt.att.net',
-			'tmomail.net',
-			'vtext.com',
-			'messaging.sprintpcs.com']
-
 	numbers = getNumbers()
 	user, pw = getLogin()
 	server.login(user, pw)
 	body = generateMsg()
 	for n in numbers:
 		if numInContacts(n):
-			print 'have correct contact info'
+			print 'have correct contact info for', n
 			server.sendmail(user, getContact(n), body)
 			print 'message sent'
 		else:
 			i = 0
-			server.sendmail(user, n + '@' + nem[i], body)
+			server.sendmail(user, n + '@' + carrierMap[i], body)
 			time.sleep(5)
-			while not lastSendIsGood() and i < len(nem):
-				server.sendmail(user,n + '@' + nem[i], body)
+			while not lastSendIsGood() and i < len(carrierMap):
+				server.sendmail(user,n + '@' + carrierMap[i], body)
 				time.sleep(5)
 				i += 1
-			writeToContacts(n, nem[i])
+			writeToContacts(n, carrierMap[i])
 	server.quit()
 
 
