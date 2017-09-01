@@ -52,21 +52,28 @@ def getSubject(raw_string):
 	email_bod = email.message_from_string(raw_string)
 	return email_bod['Subject']
 
+# TODO (IY): clean this up, seems like you should check for an empty mailbox
+# and then go off that
 def getLastestEmail(mailbox):
 	typ, data = mailbox.search(None, 'ALL')
 	loe = data[0].split()
-	typ, data = mailbox.fetch(loe[-1], '(RFC822)')
-	msg = data[0][1]
-	raw_string = msg.decode('utf-8')
-	if checkBadEmail(raw_string):
-		print 'Email was bad, deleting'
-		deleteEmail(mailbox, loe[-1])
-		return (None, None)
+	if len(loe) > 0:
+		typ, data = mailbox.fetch(loe[-1], '(RFC822)')
+		msg = data[0][1]
+		raw_string = msg.decode('utf-8')
+		if checkBadEmail(raw_string):
+			print 'Email was bad, deleting'
+			deleteEmail(mailbox, loe[-1])
+			return (None, None)
+		else:
+			print 'Email is good, returning it'
+			return (msg, loe[-1])
 	else:
 		print 'Email is good, returning it'
-		return (msg, loe[-1])
+		return ("good", 1)
 
 def lastSendIsGood():
+	print "checking last send is good"
 	failedBox = getFailedBox()
 	msg, em_id = getLastestEmail(failedBox)
 	if msg:

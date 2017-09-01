@@ -11,7 +11,11 @@ def getCurrentWTC(postal):
 
 def getCurrentConditions(postal):
 	postal = str(postal)
-	return pywapi.get_weather_from_weather_com(postal)['current_conditions']
+	return pywapi.get_weather_from_weather_com(postal, units='')['current_conditions']
+
+def getCurrentConditionsMetric(postal):
+	postal = str(postal)
+	return pywapi.get_weather_from_weather_com(postal, units='')['current_conditions']
 
 def celToF(celcius):
 	return celcius * 9/5 + 32

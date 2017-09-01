@@ -4,8 +4,8 @@ import sys
 import smtplib
 import pywapi
 import time
-from weather import getCurrentConditions, getCurrentWTC
-from email_utils import lastSendIsGood
+from weather import getCurrentWTC
+from email_mod import lastSendIsGood
 from utilities import getLogin, carrierMap
 
 def getNumbers():
@@ -36,14 +36,31 @@ def getContact(phone):
 
 def generateMsg():
 	wind, temp, clouds = getCurrentWTC('02115')
-	wind = "The wind speed is " + wind + "Km/h\n";
-	temp = "The temperature will be " + temp + "deg C\n"
-	clouds = "Heres what the sky looks like: " + clouds + "\n"
+	wind = "The wind speed is " + wind + "Mph";
+	temp = "The temperature will be " + temp + "F\n"
+	clouds = "Heres what the sky looks like: " + clouds
 	message = "Reminder you have practice tonight @ 7pm\n"
 	message = message + temp + wind + clouds
 	msg = """From: Northeastern Ultimate\nSubject: Practice\n%s""" % message
 
 	return msg
+
+# TODO (IY): You can probably turn this into sendOne and then expand into send many
+def sendAll(numbers):
+	for n in numbers:
+	 	if numInContacts(n):
+	 		print 'have correct contact info for', n
+	 		server.sendmail(user, getContact(n), body)
+	 		print 'message sent'
+	 	else:
+	 		i = 0
+	 		server.sendmail(user, n + '@' + carrierMap[i], body)
+	 		time.sleep(5)
+	 		while not lastSendIsGood() and i < len(carrierMap):
+	 			server.sendmail(user,n + '@' + carrierMap[i], body)
+	 			time.sleep(5)
+	 			i += 1
+	 		writeToContacts(n, carrierMap[i])
 
 def main():
 	server = smtplib.SMTP("smtp.gmail.com", 587)
@@ -52,24 +69,10 @@ def main():
 	user, pw = getLogin()
 	server.login(user, pw)
 	body = generateMsg()
-	server.sendmail(user,'6178165518@vtex.yolo.com', body)
+	# Testing space currently
+	server.sendmail(user,'FAKE TARGET', body)
 	time.sleep(5)
 	print lastSendIsGood()
-
-	# for n in numbers:
-	# 	if numInContacts(n):
-	# 		print 'have correct contact info for', n
-	# 		server.sendmail(user, getContact(n), body)
-	# 		print 'message sent'
-	# 	else:
-	# 		i = 0
-	# 		server.sendmail(user, n + '@' + carrierMap[i], body)
-	# 		time.sleep(5)
-	# 		while not lastSendIsGood() and i < len(carrierMap):
-	# 			server.sendmail(user,n + '@' + carrierMap[i], body)
-	# 			time.sleep(5)
-	# 			i += 1
-	# 		writeToContacts(n, carrierMap[i])
 	server.quit()
 
 
