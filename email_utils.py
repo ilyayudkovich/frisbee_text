@@ -5,12 +5,39 @@ import time
 import email
 from utilities import getLogin
 
-def getInbox():
+INBOX  = 'Inbox'
+FAILED = 'Failed'
+
+def printMailBoxes():
 	user, pw = getLogin()
 	mail = imaplib.IMAP4_SSL('imap.gmail.com')
 	mail.login(user, pw)
-	mail.select('inbox')
+	rv, mailboxes = mail.list()
+	print mailboxes
+
+# This will fail if it's not Inbox or Failed at the moment
+# Definitely needs some formatting
+def getBox(box):
+	if box.lower() not in [INBOX.lower(), FAILED.lower()]:
+		print "Defaulting to inbox"
+		box = INBOX
+	user, pw = getLogin()
+	mail = imaplib.IMAP4_SSL('imap.gmail.com')
+	mail.login(user, pw)
+	mail.select(box)
 	return mail
+
+def getInbox():
+	return getBox('Inbox')
+
+def getFailedBox():
+	return getBox('Failed')
+
+def getFailedMessages():
+	failedBox = getFailedBox()
+	latest_email = getLastestEmail(failedBox)
+	print latest_email
+
 
 def deleteEmail(mailbox, mid):
 	mailbox.store(mid, '+FLAGS', '\\Deleted')
@@ -40,13 +67,11 @@ def getLastestEmail(mailbox):
 		return (msg, loe[-1])
 
 def lastSendIsGood():
-	inbox = getInbox()
-	msg, mid = getLastestEmail(inbox)
+	failedBox = getFailedBox()
+	msg, em_id = getLastestEmail(failedBox)
 	if msg:
-		print 'Last email was good'
 		return True
 	else:
-		print 'Try a different carrier'
 		return False
 
 def checkBadEmail(raw_string):
@@ -55,4 +80,3 @@ def checkBadEmail(raw_string):
 	subject = getSubject(raw_string)
 	sender = getSender(raw_string)
 	return sender == badSender
-

@@ -52,21 +52,24 @@ def main():
 	user, pw = getLogin()
 	server.login(user, pw)
 	body = generateMsg()
+	server.sendmail(user,'6178165518@vtex.yolo.com', body)
+	time.sleep(5)
+	print lastSendIsGood()
 
-	for n in numbers:
-		if numInContacts(n):
-			print 'have correct contact info for', n
-			server.sendmail(user, getContact(n), body)
-			print 'message sent'
-		else:
-			i = 0
-			server.sendmail(user, n + '@' + carrierMap[i], body)
-			time.sleep(5)
-			while not lastSendIsGood() and i < len(carrierMap):
-				server.sendmail(user,n + '@' + carrierMap[i], body)
-				time.sleep(5)
-				i += 1
-			writeToContacts(n, carrierMap[i])
+	# for n in numbers:
+	# 	if numInContacts(n):
+	# 		print 'have correct contact info for', n
+	# 		server.sendmail(user, getContact(n), body)
+	# 		print 'message sent'
+	# 	else:
+	# 		i = 0
+	# 		server.sendmail(user, n + '@' + carrierMap[i], body)
+	# 		time.sleep(5)
+	# 		while not lastSendIsGood() and i < len(carrierMap):
+	# 			server.sendmail(user,n + '@' + carrierMap[i], body)
+	# 			time.sleep(5)
+	# 			i += 1
+	# 		writeToContacts(n, carrierMap[i])
 	server.quit()
 
 
