@@ -36,17 +36,16 @@ def getContact(phone):
 
 def generateMsg():
 	wind, temp, clouds = getCurrentWTC('02115')
-	wind = "The wind speed is " + wind + "Mph";
-	temp = "The temperature will be " + temp + "F\n"
-	clouds = "Heres what the sky looks like: " + clouds
-	message = "Reminder you have practice tonight @ 7pm\n"
-	message = message + temp + wind + clouds
-	msg = """From: Northeastern Ultimate\nSubject: Practice\n%s""" % message
+	wind = "The wind speed is " + wind + "Mph. "
+	temp = "The temperature will be " + temp + "F.\n"
+	clouds = "The sky will be: " + clouds
+	message = temp + wind + clouds
+	msg = """From: Northeastern Ultimate\nSubject: Practice tn @ 7\n%s""" % message
 
 	return msg
 
 # TODO (IY): You can probably turn this into sendOne and then expand into send many
-def sendAll(numbers):
+def sendAll(numbers, user, server, body):
 	for n in numbers:
 	 	if numInContacts(n):
 	 		print 'have correct contact info for', n
@@ -70,8 +69,9 @@ def main():
 	server.login(user, pw)
 	body = generateMsg()
 	# Testing space currently
-	server.sendmail(user,'FAKE TARGET', body)
-	time.sleep(5)
+	server.sendmail(user,'', body)
+	# sendAll(numbers, user, server, body)
+	time.sleep(15)
 	print lastSendIsGood()
 	server.quit()
 

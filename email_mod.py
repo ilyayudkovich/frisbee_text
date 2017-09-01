@@ -53,7 +53,6 @@ def getSubject(raw_string):
 	return email_bod['Subject']
 
 # TODO (IY): clean this up, seems like you should check for an empty mailbox
-# and then go off that
 def getLastestEmail(mailbox):
 	typ, data = mailbox.search(None, 'ALL')
 	loe = data[0].split()
