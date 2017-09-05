@@ -7,6 +7,7 @@ import time
 from weather import getCurrentWTC
 from email_mod import lastSendIsGood
 from utilities import getLogin, carrierMap
+from webutils import getAllNumbers, carrierHomePage
 
 def getNumbers():
 	numbers = []
@@ -23,6 +24,12 @@ def writeToContacts(phone, carrierMap):
 		contact = phone + '@' + carrierMap + '\n'
 		print 'Adding contact ', contact, 'to contacts file'
 		f.write(contact)
+	f.close()
+
+def writeToContacts(numbers):
+	with open('./docs/contacts', 'a+') as f:
+		for num in numbers:
+			f.write(num + '\n')
 	f.close()
 
 def numInContacts(phone):
@@ -68,14 +75,17 @@ def main():
 	server = smtplib.SMTP("smtp.gmail.com", 587)
 	server.starttls()
 	numbers = getNumbers()
-	user, pw = getLogin()
-	server.login(user, pw)
-	body = generateMsg()
-	# Testing space currently
-	server.sendmail(user,'yudkovich.i@husky.neu.edu', body)
-	# sendAll(numbers, user, server, body)
-	time.sleep(15)
-	print lastSendIsGood()
+	driver = carrierHomePage()
+	contacts = getAllNumbers(driver, numbers)
+	writeToContacts(contacts)
+	# user, pw = getLogin()
+	# server.login(user, pw)
+	# body = generateMsg()
+	# # Testing space currently
+	# server.sendmail(user,'yudkovich.i@husky.neu.edu', body)
+	# # sendAll(numbers, user, server, body)
+	# time.sleep(15)
+	# print lastSendIsGood()
 	server.quit()
 
 
