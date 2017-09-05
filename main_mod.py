@@ -44,22 +44,25 @@ def generateMsg():
 
 	return msg
 
-# TODO (IY): You can probably turn this into sendOne and then expand into send many
+def sendOne(number, user, server, body):
+	if numInContacts(number):
+		print 'have correct contact infor for', number
+		server.sendmail(user, getContact(number), body)
+		print 'message sent'
+	else:
+		i = 0
+		server.sendmail(user, number + '@' + carrierMap[i], body)
+		time.sleep(5)
+		i += 1
+		while not lastSendIsGood() and i < len(carrierMap):
+			server.sendmail(user, number + '@' + carrierMap[i], body)
+			time.sleep(5)
+			i += 1
+		writeToContacts(number, carrierMap[i - 1])
+
 def sendAll(numbers, user, server, body):
 	for n in numbers:
-	 	if numInContacts(n):
-	 		print 'have correct contact info for', n
-	 		server.sendmail(user, getContact(n), body)
-	 		print 'message sent'
-	 	else:
-	 		i = 0
-	 		server.sendmail(user, n + '@' + carrierMap[i], body)
-	 		time.sleep(5)
-	 		while not lastSendIsGood() and i < len(carrierMap):
-	 			server.sendmail(user,n + '@' + carrierMap[i], body)
-	 			time.sleep(5)
-	 			i += 1
-	 		writeToContacts(n, carrierMap[i])
+	 	sendOne(n, user, server, body)
 
 def main():
 	server = smtplib.SMTP("smtp.gmail.com", 587)
@@ -69,7 +72,7 @@ def main():
 	server.login(user, pw)
 	body = generateMsg()
 	# Testing space currently
-	server.sendmail(user,'', body)
+	server.sendmail(user,'yudkovich.i@husky.neu.edu', body)
 	# sendAll(numbers, user, server, body)
 	time.sleep(15)
 	print lastSendIsGood()
