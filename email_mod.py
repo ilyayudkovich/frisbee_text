@@ -56,6 +56,7 @@ def getSubject(raw_string):
 def getLastestEmail(mailbox):
 	typ, data = mailbox.search(None, 'ALL')
 	loe = data[0].split()
+	# if the mailbox isn't empty
 	if len(loe) > 0:
 		typ, data = mailbox.fetch(loe[-1], '(RFC822)')
 		msg = data[0][1]

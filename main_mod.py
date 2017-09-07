@@ -25,6 +25,13 @@ def writeToContacts(phone, carrierMap):
 		f.write(contact)
 	f.close()
 
+def writeToContacts(numbers):
+	with open('./docs/contacts', 'a+') as f:
+		for num in numbers:
+			if not numInContacts(num):
+				f.write(num + '\n')
+	f.close()
+
 def numInContacts(phone):
 	return phone in open('./docs/contacts').read()
 
@@ -65,9 +72,6 @@ def sendAll(numbers, user, server, body):
 	 	sendOne(n, user, server, body)
 
 def main():
-	server = smtplib.SMTP("smtp.gmail.com", 587)
-	server.starttls()
-	numbers = getNumbers()
 	user, pw = getLogin()
 	server.login(user, pw)
 	body = generateMsg()
