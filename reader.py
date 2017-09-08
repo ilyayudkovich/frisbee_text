@@ -15,11 +15,30 @@ def max_row(ws):
             continue
     return i
 
-<<<<<<< Updated upstream
-dates = [sheet.cell(row=i, column=2).value for i in range(2, max_row(sheet) + 1)]
+def generateDTL():
+    dtl = []
+    for i in range(2, max_row(sheet) + 1):
+        date = sheet.cell(row=i, column=2).value
+        time = sheet.cell(row=i, column=3).value
+        loc  = sheet.cell(row=i, column=4).value
+        dtl.append((date, time, loc))
+    return dtl
 
-=======
->>>>>>> Stashed changes
+def getDates():
+    dtl = generateDTL()
+    dates = [date[0] for date in dtl]
+    return dates
+
+def getTimes():
+    dtl = generateDTL()
+    times = [time[1] for time in dtl]
+    return times
+
+def getLocs():
+    dtl = generateDTL()
+    locs = [loc[2] for loc in dtl]
+    return locs
+
 def getDay():
     return currentDate.day
 
@@ -34,19 +53,11 @@ def sameDay(date):
            getMonth() == date.month and
            getYear() == date.year)
 
-<<<<<<< Updated upstream
-def practiceToday(dates):
-    for d in dates:
-        if sameDay(d):
-            return True
-    return False
 
-print practiceToday(dates)
-=======
-dates = [sheet.cell(row=i, column=2).value for i in range(2, max_row(sheet) + 1)]
-
-for date in dates:
-    print sameDay(date)
->>>>>>> Stashed changes
-
-
+def practiceToday():
+    # generate all the tuples
+    dtls = generateDTL()
+    for dtl in dtls:
+        if sameDay(dtl[0]):
+            return (True, dtl[1], dtl[2])
+    return (False, None, None)
