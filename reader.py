@@ -15,6 +15,8 @@ def max_row(ws):
             continue
     return i
 
+dates = [sheet.cell(row=i, column=2).value for i in range(2, max_row(sheet) + 1)]
+
 def getDay():
     return currentDate.day
 
@@ -29,9 +31,12 @@ def sameDay(date):
            getMonth() == date.month and
            getYear() == date.year)
 
-dates = [sheet.cell(row=i, column=2).value for i in range(2, max_row(sheet) + 1)]
+def practiceToday(dates):
+    for d in dates:
+        if sameDay(d):
+            return True
+    return False
 
-for date in dates:
-    print sameDay(date)
+print practiceToday(dates)
 
 
