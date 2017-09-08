@@ -9,6 +9,7 @@ from weather import getCurrentWTC
 from email_mod import lastSendIsGood
 from utilities import getLogin, carrierMap
 
+<<<<<<< Updated upstream
 def getNumbers():
     numbers = []
     with open('./docs/numbers', 'r') as f:
@@ -18,6 +19,17 @@ def getNumbers():
                 numbers.append(x)
     f.close()
     return numbers
+=======
+# def getNumbers():
+# 	numbers = []
+# 	with open('./docs/numbers', 'r') as f:
+# 		for x in f:
+# 			x = x.rstrip()
+# 			if x:
+# 				numbers.append(x)
+# 	f.close()
+# 	return numbers
+>>>>>>> Stashed changes
 
 def writeToContacts(phone, carrierMap):
     with open('./docs/contacts', 'a+') as f:
@@ -26,12 +38,21 @@ def writeToContacts(phone, carrierMap):
         f.write(contact)
     f.close()
 
+<<<<<<< Updated upstream
 def writeToContacts(numbers):
     with open('./docs/contacts', 'a+') as f:
         for num in numbers:
             if not numInContacts(num):
                 f.write(num + '\n')
     f.close()
+=======
+# def writeToContacts(numbers):
+# 	with open('./docs/contacts', 'a+') as f:
+# 		for num in numbers:
+# 			if not numInContacts(num):
+# 				f.write(num + '\n')
+# 	f.close()
+>>>>>>> Stashed changes
 
 def numInContacts(phone):
     return phone in open('./docs/contacts').read()

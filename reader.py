@@ -15,8 +15,11 @@ def max_row(ws):
             continue
     return i
 
+<<<<<<< Updated upstream
 dates = [sheet.cell(row=i, column=2).value for i in range(2, max_row(sheet) + 1)]
 
+=======
+>>>>>>> Stashed changes
 def getDay():
     return currentDate.day
 
@@ -31,6 +34,7 @@ def sameDay(date):
            getMonth() == date.month and
            getYear() == date.year)
 
+<<<<<<< Updated upstream
 def practiceToday(dates):
     for d in dates:
         if sameDay(d):
@@ -38,5 +42,11 @@ def practiceToday(dates):
     return False
 
 print practiceToday(dates)
+=======
+dates = [sheet.cell(row=i, column=2).value for i in range(2, max_row(sheet) + 1)]
+
+for date in dates:
+    print sameDay(date)
+>>>>>>> Stashed changes
 
 
