@@ -4,7 +4,8 @@ import sys
 import smtplib
 import pywapi
 import time
-import reader
+import argparse
+
 from weather import getCurrentWTC
 from email_mod import lastSendIsGood
 from utilities import getLogin, carrierMap
@@ -18,6 +19,16 @@ def getNumbers():
                 numbers.append(x)
     f.close()
     return numbers
+
+def getContacts():
+    contacts = []
+    with open('./docs/contacts', 'r') as f:
+        for con in f:
+            con = con.rstrip()
+            if con:
+                contacts.append(con)
+    f.close()
+    return contacts
 
 def writeToContacts(phone, carrierMap):
     with open('./docs/contacts', 'a+') as f:
@@ -52,21 +63,14 @@ def generateMsg(time, loc):
 
     return msg
 
+def generareCancelMsg(time, loc):
+    msg = """From: Northeastern Ultimate\nSubject: Practice tn @ %s, %s\n%s""" % (time, loc, "CANCELLED")
+    return msg
+
 def sendOne(number, user, server, body):
     if numInContacts(number):
         print 'have correct contact infor for', number
         server.sendmail(user, getContact(number), body)
-    #     print 'message sent'
-    # else:
-    #     i = 0
-    #     server.sendmail(user, number + '@' + carrierMap[i], body)
-    #     time.sleep(5)
-    #     i += 1
-    #     while not lastSendIsGood() and i < len(carrierMap):
-    #         server.sendmail(user, number + '@' + carrierMap[i], body)
-    #         time.sleep(5)
-    #         i += 1
-    #     writeToContacts(number, carrierMap[i - 1])
 
 def sendAll(numbers, user, server, body):
     for n in numbers:
@@ -77,13 +81,18 @@ def main():
     server.starttls()
     user, pw = getLogin()
     server.login(user, pw)
-    dtl = reader.practiceToday()
-    if dtl[0]:
-        print "There is practice today"
-        body = generateMsg(dtl[1], dtl[2])
-        sendAll(getNumbers(), user, server, body)
+    parser = argparse.ArgumentParser(description='Send practice texts to NEU Ultimate')
+    parser.add_argument('-c', action='store_true', default=False, dest='cancelled')
+    parser.add_argument('time', action='store')
+    parser.add_argument('location', action='store')
+    results = parser.parse_args()
+    if results.cancelled:
+        print "generating cancelled message"
+        body = generareCancelMsg(results.time, results.location)
     else:
-        print "No practice today"
+        print "generating regular message"
+        body = generateMsg(results.time, results.location)
+    sendAll(getNumbers(), user, server, body)
     server.quit()
 
 
