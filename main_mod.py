@@ -37,13 +37,6 @@ def writeToContacts(phone, carrierMap):
         f.write(contact)
     f.close()
 
-def writeToContacts(numbers):
-    with open('./docs/contacts', 'a+') as f:
-        for num in numbers:
-            if not numInContacts(num):
-                f.write(num + '\n')
-    f.close()
-
 def numInContacts(phone):
     return phone in open('./docs/contacts').read()
 
