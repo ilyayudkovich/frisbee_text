@@ -30,13 +30,6 @@ def getContacts():
     f.close()
     return contacts
 
-def writeToContacts(phone, carrierMap):
-    with open('./docs/contacts', 'a+') as f:
-        contact = phone + '@' + carrierMap + '\n'
-        print 'Adding contact ', contact, 'to contacts file'
-        f.write(contact)
-    f.close()
-
 def numInContacts(phone):
     return phone in open('./docs/contacts').read()
 
@@ -46,23 +39,23 @@ def getContact(phone):
             if phone in line:
                 return line
 
-def generateMsg(time, loc):
+def generateMsg(kind, time, loc):
     wind, temp, clouds = getCurrentWTC('02115')
     wind = "The wind speed is " + wind + "mph "
     temp = "The temperature will be " + temp + "F "
     clouds = "and " + clouds.lower()
     message = temp + wind + clouds
-    msg = """From: Northeastern Ultimate\nSubject: Practice tn @ %s, %s\n%s""" % (time, loc, message)
+    msg = """From: Northeastern Ultimate\nSubject: %s tn @ %s, %s\n%s""" % (kind, time, loc, message)
 
     return msg
 
-def generareCancelMsg(time, loc):
-    msg = """From: Northeastern Ultimate\nSubject: Practice tn @ %s, %s\n%s""" % (time, loc, "CANCELLED")
+def generateCancelMsg(kind, time, loc):
+    msg = """From: Northeastern Ultimate\nSubject: %s tn @ %s, %s\n%s""" % (kind, time, loc, "CANCELLED")
     return msg
 
 def sendOne(number, user, server, body):
     if numInContacts(number):
-        print 'have correct contact infor for', number
+        print 'Sending to', number
         server.sendmail(user, getContact(number), body)
 
 def sendAll(numbers, user, server, body):
@@ -76,15 +69,16 @@ def main():
     server.login(user, pw)
     parser = argparse.ArgumentParser(description='Send practice texts to NEU Ultimate')
     parser.add_argument('-c', action='store_true', default=False, dest='cancelled')
+    parser.add_argument('kind', action='store')
     parser.add_argument('time', action='store')
     parser.add_argument('location', action='store')
     results = parser.parse_args()
     if results.cancelled:
         print "generating cancelled message"
-        body = generareCancelMsg(results.time, results.location)
+        body = generateCancelMsg(results.kind, results.time, results.location)
     else:
         print "generating regular message"
-        body = generateMsg(results.time, results.location)
+        body = generateMsg(results.kind, results.time, results.location)
     sendAll(getNumbers(), user, server, body)
     server.quit()
 

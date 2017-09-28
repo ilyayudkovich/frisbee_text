@@ -73,7 +73,6 @@ def getLastestEmail(mailbox):
 		return ("good", 1)
 
 def lastSendIsGood():
-	print "checking last send is good"
 	failedBox = getFailedBox()
 	msg, em_id = getLastestEmail(failedBox)
 	if msg:

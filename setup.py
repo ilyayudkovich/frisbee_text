@@ -25,6 +25,13 @@ def writeToContacts(contacts):
 				f.write(c + '\n')
 	f.close()
 
+def writeToContacts(phone, carrierMap):
+    with open('./docs/contacts', 'a+') as f:
+        contact = phone + '@' + carrierMap + '\n'
+        print 'Adding contact ', contact, 'to contacts file'
+        f.write(contact)
+    f.close()
+
 def main():
 	numbers = getNumbers()
 	driver = carrierHomePage()
