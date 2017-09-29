@@ -31,7 +31,7 @@ def getContacts():
     return contacts
 
 def numInContacts(phone):
-    return phone in open('./docs/contacts').read()
+    return str(phone) in open('./docs/contacts').read()
 
 def getContact(phone):
     with open('./docs/contacts', 'r') as f:
@@ -58,6 +58,7 @@ def sendOne(number, user, server, body):
         print 'Sending to', number
         server.sendmail(user, getContact(number), body)
 
+
 def sendAll(numbers, user, server, body):
     for n in numbers:
         sendOne(n, user, server, body)
@@ -69,6 +70,7 @@ def main():
     server.login(user, pw)
     parser = argparse.ArgumentParser(description='Send practice texts to NEU Ultimate')
     parser.add_argument('-c', help='Is it cancelled or nah', action='store_true', default=False, dest='cancelled')
+    parser.add_argument('-s', help='Send single text', action='store_true', default=False, dest='single')
     parser.add_argument('kind', action='store')
     parser.add_argument('time', action='store')
     parser.add_argument('location', action='store')
@@ -79,7 +81,16 @@ def main():
     else:
         print "generating regular message"
         body = generateMsg(results.kind, results.time, results.location)
-    sendAll(getNumbers(), user, server, body)
+    if results.single:
+        number = input('Enter the number: ')
+        contact = getContact(str(number))
+        if not contact:
+            carrier = input('Enter the carrier: ')
+            carrier = carrierMap[carrier]
+            contact = str(number) + '@' + carrier
+        sendOne(contact, user, server, body)
+    else:
+        sendAll(getNumbers(), user, server, body)
     server.quit()
 
 
