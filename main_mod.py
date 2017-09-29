@@ -68,7 +68,7 @@ def main():
     user, pw = getLogin()
     server.login(user, pw)
     parser = argparse.ArgumentParser(description='Send practice texts to NEU Ultimate')
-    parser.add_argument('-c', action='store_true', default=False, dest='cancelled')
+    parser.add_argument('-c', help='Is it cancelled or nah', action='store_true', default=False, dest='cancelled')
     parser.add_argument('kind', action='store')
     parser.add_argument('time', action='store')
     parser.add_argument('location', action='store')
