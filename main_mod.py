@@ -4,83 +4,83 @@ import sys
 import smtplib
 import pywapi
 import time
+import argparse
+
 from weather import getCurrentWTC
 from email_mod import lastSendIsGood
 from utilities import getLogin, carrierMap
 
 def getNumbers():
-	numbers = []
-	with open('./docs/numbers', 'r') as f:
-		for x in f:
-			x = x.rstrip()
-			if x:
-				numbers.append(x)
-	f.close()
-	return numbers
+    numbers = []
+    with open('./docs/numbers', 'r') as f:
+        for x in f:
+            x = x.rstrip()
+            if x:
+                numbers.append(x)
+    f.close()
+    return numbers
 
-def writeToContacts(phone, carrierMap):
-	with open('./docs/contacts', 'a+') as f:
-		contact = phone + '@' + carrierMap + '\n'
-		print 'Adding contact ', contact, 'to contacts file'
-		f.write(contact)
-	f.close()
-
-def writeToContacts(numbers):
-	with open('./docs/contacts', 'a+') as f:
-		for num in numbers:
-			if not numInContacts(num):
-				f.write(num + '\n')
-	f.close()
+def getContacts():
+    contacts = []
+    with open('./docs/contacts', 'r') as f:
+        for con in f:
+            con = con.rstrip()
+            if con:
+                contacts.append(con)
+    f.close()
+    return contacts
 
 def numInContacts(phone):
-	return phone in open('./docs/contacts').read()
+    return phone in open('./docs/contacts').read()
 
 def getContact(phone):
-	with open('./docs/contacts', 'r') as f:
-		for line in f:
-			if phone in line:
-				return line
+    with open('./docs/contacts', 'r') as f:
+        for line in f:
+            if phone in line:
+                return line
 
-def generateMsg():
-	wind, temp, clouds = getCurrentWTC('02115')
-	wind = "The wind speed is " + wind + "Mph. "
-	temp = "The temperature will be " + temp + "F.\n"
-	clouds = "The sky will be: " + clouds
-	message = temp + wind + clouds
-	msg = """From: Northeastern Ultimate\nSubject: Practice tn @ 7\n%s""" % message
+def generateMsg(kind, time, loc):
+    wind, temp, clouds = getCurrentWTC('02115')
+    wind = "The wind speed is " + wind + "mph "
+    temp = "The temperature will be " + temp + "F "
+    clouds = "and " + clouds.lower()
+    message = temp + wind + clouds
+    msg = """From: Northeastern Ultimate\nSubject: %s tn @ %s, %s\n%s""" % (kind, time, loc, message)
 
-	return msg
+    return msg
+
+def generateCancelMsg(kind, time, loc):
+    msg = """From: Northeastern Ultimate\nSubject: %s tn @ %s, %s\n%s""" % (kind, time, loc, "CANCELLED")
+    return msg
 
 def sendOne(number, user, server, body):
-	if numInContacts(number):
-		print 'have correct contact infor for', number
-		server.sendmail(user, getContact(number), body)
-		print 'message sent'
-	else:
-		i = 0
-		server.sendmail(user, number + '@' + carrierMap[i], body)
-		time.sleep(5)
-		i += 1
-		while not lastSendIsGood() and i < len(carrierMap):
-			server.sendmail(user, number + '@' + carrierMap[i], body)
-			time.sleep(5)
-			i += 1
-		writeToContacts(number, carrierMap[i - 1])
+    if numInContacts(number):
+        print 'Sending to', number
+        server.sendmail(user, getContact(number), body)
 
 def sendAll(numbers, user, server, body):
-	for n in numbers:
-	 	sendOne(n, user, server, body)
+    for n in numbers:
+        sendOne(n, user, server, body)
 
 def main():
-	user, pw = getLogin()
-	server.login(user, pw)
-	body = generateMsg()
-	# Testing space currently
-	server.sendmail(user,'yudkovich.i@husky.neu.edu', body)
-	# sendAll(numbers, user, server, body)
-	time.sleep(15)
-	print lastSendIsGood()
-	server.quit()
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    user, pw = getLogin()
+    server.login(user, pw)
+    parser = argparse.ArgumentParser(description='Send practice texts to NEU Ultimate')
+    parser.add_argument('-c', help='Is it cancelled or nah', action='store_true', default=False, dest='cancelled')
+    parser.add_argument('kind', action='store')
+    parser.add_argument('time', action='store')
+    parser.add_argument('location', action='store')
+    results = parser.parse_args()
+    if results.cancelled:
+        print "generating cancelled message"
+        body = generateCancelMsg(results.kind, results.time, results.location)
+    else:
+        print "generating regular message"
+        body = generateMsg(results.kind, results.time, results.location)
+    sendAll(getNumbers(), user, server, body)
+    server.quit()
 
 
 if __name__ == '__main__':
