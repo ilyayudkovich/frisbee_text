@@ -19,4 +19,5 @@ setup(
 	author="Ilya Yudkovich",
 	author_email="yudkovich.i@husky.neu.edu",
 	description="Texting for Ultimate",
+	url='https://github.com/iyud/frisbee_text'
 )
