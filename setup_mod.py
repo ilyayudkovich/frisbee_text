@@ -47,11 +47,26 @@ def getServerLogin():
 		f.write(pw + '\n')
 	f.close()
 
+# TODO: error checking
+def addNumbers():
+	numbers = []
+	with open('./docs/numbers', 'a+') as f:
+		while True:
+			print "Make sure to only enter the 10  digits of the number"
+			num = raw_input("Enter a number youd like to add (or Q to quit): ")
+			if num == "Q":
+				break
+			else:
+				numbers.append(num)
+				f.write(num + '\n')
+	f.close()
+	return numbers
+
 def main():
 	createDocsDir()
 	if not os.path.isfile('./docs/login'):
 		getServerLogin()
-	numbers = getNumbers()
+	numbers = addNumbers()
 	driver = carrierHomePage()
 	contacts = getAllNumbers(driver, numbers)
 	writeToContacts(contacts)
