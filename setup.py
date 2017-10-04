@@ -1,42 +1,22 @@
-#!/usr/bin/env python
-import os
-import sys
-from webutils import carrierHomePage, getAllNumbers
+#!usr/bin/env python
+from setuptools import setup, find_packages
 
-# This should create the failed label in the gmail inbox and create a filter.
-# probably use selenium to manually create the labels and set up the filters.
-# Also setting up the contacts file should be done in here
+with open('requirements.txt', 'r') as requirements_file:
+    requirements = list(requirements_file)
 
-
-def getNumbers():
-	numbers = []
-	with open('./docs/numbers', 'r') as f:
-		for x in f:
-			x = x.rstrip()
-			if x:
-				numbers.append(x)
-	f.close()
-	return numbers
-
-def writeToContacts(contacts):
-	with open('./docs/contacts', 'a+') as f:
-		for c in contacts:
-			if not numInContacts(c):
-				f.write(c + '\n')
-	f.close()
-
-def writeToContacts(phone, carrierMap):
-    with open('./docs/contacts', 'a+') as f:
-        contact = phone + '@' + carrierMap + '\n'
-        print 'Adding contact ', contact, 'to contacts file'
-        f.write(contact)
-    f.close()
-
-def main():
-	numbers = getNumbers()
-	driver = carrierHomePage()
-	contacts = getAllNumbers(driver, numbers)
-	writeToContacts(contacts)
-
-if __name__ == '__main__':
-	main()
+setup(
+	name="FrisbeeText",
+	version="0.0.1",
+	packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*",
+                                    "tests"]),
+	scripts=[],
+	install_requires=requirements,
+	entry_points={
+		'console_scripts': [
+			'frisbeeText = frisbee_text.main_mod:main',
+		]
+	},
+	author="Ilya Yudkovich",
+	author_email="yudkovich.i@husky.neu.edu",
+	description="Texting for Ultimate",
+)
