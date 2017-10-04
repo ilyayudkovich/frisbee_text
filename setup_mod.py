@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+import getpass
 from webutils import carrierHomePage, getAllNumbers
 
 # This should create the failed label in the gmail inbox and create a filter.
@@ -32,7 +33,24 @@ def writeToContacts(phone, carrierMap):
         f.write(contact)
     f.close()
 
+# TODO: fix for RACE condition
+def createDocsDir():
+	if not os.path.exists('./docs'):
+		os.makedirs('./docs')
+
+def getServerLogin():
+	email = raw_input('What is the email address that will be used: ')
+	pw = getpass.getpass(prompt='What is the password for that email: ')
+	print 'You entered email:', email, 'pw:', pw
+	with open('./docs/login', 'a+') as f:
+		f.write(email + '\n')
+		f.write(pw + '\n')
+	f.close()
+
 def main():
+	createDocsDir()
+	if not os.path.isfile('./docs/login'):
+		getServerLogin()
 	numbers = getNumbers()
 	driver = carrierHomePage()
 	contacts = getAllNumbers(driver, numbers)

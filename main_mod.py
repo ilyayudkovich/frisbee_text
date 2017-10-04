@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import smtplib
 import argparse
+import os
 
 from weather import getCurrentWTC
 from email_mod import lastSendIsGood

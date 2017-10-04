@@ -9,7 +9,7 @@ setup(
 	version="0.0.1",
 	packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*",
                                     "tests"]),
-	scripts=[],
+	scripts=['setup_mod.py'],
 	install_requires=requirements,
 	entry_points={
 		'console_scripts': [
