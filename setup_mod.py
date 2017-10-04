@@ -8,10 +8,9 @@ from webutils import carrierHomePage, getAllNumbers
 # probably use selenium to manually create the labels and set up the filters.
 # Also setting up the contacts file should be done in here
 
-
 def getNumbers():
 	numbers = []
-	with open('./docs/numbers', 'r') as f:
+	with open('./docs/numbers', 'a+') as f:
 		for x in f:
 			x = x.rstrip()
 			if x:
