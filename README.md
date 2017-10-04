@@ -11,7 +11,7 @@ followed by a new line. The login file contains two lines
 
 ## Requirements:
 The following items need to be installed in order for the program to run.
-
+Selenium firefox driver can be found here: https://github.com/mozilla/geckodriver/releases
 
 ### TO-DO:
 

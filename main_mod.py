@@ -8,7 +8,7 @@ from utilities import getLogin, carrierMap
 
 import logging
 
-logger = logging.getLogger(name)
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 def getNumbers():
@@ -67,7 +67,6 @@ def sendAll(numbers, user, server, body):
 def main():
     logging.info("About to connect to server")
     server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.set_debuglevel(True)
     server.starttls()
     user, pw = getLogin()
     server.login(user, pw)

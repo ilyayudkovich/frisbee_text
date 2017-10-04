@@ -13,7 +13,7 @@ setup(
 	install_requires=requirements,
 	entry_points={
 		'console_scripts': [
-			'frisbeeText = frisbee_text.main_mod:main',
+			'FrisbeeText = main_mod:main',
 		]
 	},
 	author="Ilya Yudkovich",
