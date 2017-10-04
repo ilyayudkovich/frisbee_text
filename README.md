@@ -26,20 +26,8 @@ it more user friendly.
 
 ### HOW TO USE
 ```bash
-1. cd docs
-2. touch numbers
-3. touch login
-4. cd ..
-5. pip install -e .
+1. pip install -e .
+2. python setup.py build
+3. python setup.py install
+4. FrisbeeText -h
 ```
-6. Inside numbers, add a 10 digit number that you want to receive the message
-	- The format should just be the numbers themselves, nothing extra
-7. Run python setup.py
-	- This will open up a selenium firefox window and process to get all the contacts with correct carriers gateways attached
-```python
-8. FrisbeeText -h
-	- This will display how to use the application
-```
-
-
-
