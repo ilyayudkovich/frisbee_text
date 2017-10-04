@@ -11,11 +11,7 @@ followed by a new line. The login file contains two lines
 
 ## Requirements:
 The following items need to be installed in order for the program to run.
-- openpyxl 2.4.8
-- pip 9.0.1 or greater
-- python 2.7 or greater
-- pywapi 0.3.8 or greater
-- selenium for python as well as a selenium firefox driver
+Selenium firefox driver can be found here: https://github.com/mozilla/geckodriver/releases
 
 ### TO-DO:
 

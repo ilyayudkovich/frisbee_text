@@ -1,14 +1,15 @@
 #!/usr/bin/env python
-import os
-import sys
 import smtplib
-import pywapi
-import time
 import argparse
 
 from weather import getCurrentWTC
 from email_mod import lastSendIsGood
 from utilities import getLogin, carrierMap
+
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 def getNumbers():
     numbers = []
@@ -55,7 +56,7 @@ def generateCancelMsg(kind, time, loc):
 
 def sendOne(number, user, server, body):
     if numInContacts(number):
-        print 'Sending to', number
+        logger.info("Sending message to %s", number)
         server.sendmail(user, getContact(number), body)
 
 
@@ -64,25 +65,29 @@ def sendAll(numbers, user, server, body):
         sendOne(n, user, server, body)
 
 def main():
+    logging.info("About to connect to server")
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     user, pw = getLogin()
     server.login(user, pw)
+
     parser = argparse.ArgumentParser(description='Send practice texts to NEU Ultimate')
-    parser.add_argument('-c', help='Is it cancelled or nah', action='store_true', default=False, dest='cancelled')
+    parser.add_argument('-c', help='Send cancelled message', action='store_true', default=False, dest='cancelled')
     parser.add_argument('-s', help='Send single text', action='store_true', default=False, dest='single')
     parser.add_argument('kind', action='store')
     parser.add_argument('time', action='store')
     parser.add_argument('location', action='store')
     results = parser.parse_args()
+
     if results.cancelled:
-        print "generating cancelled message"
+        logger.info("Preparing cancelled message")
         body = generateCancelMsg(results.kind, results.time, results.location)
     else:
-        print "generating regular message"
+        logger.info("Preparing regular message")
         body = generateMsg(results.kind, results.time, results.location)
     if results.single:
-        number = input('Enter the number: ')
+        logger.info("Sending singular message")
+        number = input('Enter phone number: ')
         contact = getContact(str(number))
         if not contact:
             carrier = input('Enter the carrier: ')
@@ -90,6 +95,7 @@ def main():
             contact = str(number) + '@' + carrier
         sendOne(contact, user, server, body)
     else:
+        logger.info("Sending mass message")
         sendAll(getNumbers(), user, server, body)
     server.quit()
 
