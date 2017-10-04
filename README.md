@@ -29,13 +29,17 @@ it more user friendly.
 1. cd docs
 2. touch numbers
 3. touch login
+4. cd ..
+5. pip install -e .
 ```
-4. Inside numbers, add a 10 digit number that you want to receive the message
+6. Inside numbers, add a 10 digit number that you want to receive the message
 	- The format should just be the numbers themselves, nothing extra
-5. Run python setup.py
+7. Run python setup.py
 	- This will open up a selenium firefox window and process to get all the contacts with correct carriers gateways attached
-6. Run python main_mod.py -h
+```python
+8. FrisbeeText -h
 	- This will display how to use the application
+```
 
 
 
