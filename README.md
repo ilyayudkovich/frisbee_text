@@ -12,6 +12,12 @@ followed by a new line. The login file contains two lines
 ## Requirements:
 The following items need to be installed in order for the program to run.
 Selenium firefox driver can be found here: https://github.com/mozilla/geckodriver/releases
+Once this is downloaded:
+```bash
+1. go to downloads folder (eg. cd ~/Downloads/ if on linux)
+2. tar -xvf <file downloaded>
+3. mv geckodriver /usr/bin/
+```
 
 ### TO-DO:
 
