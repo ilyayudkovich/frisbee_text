@@ -9,7 +9,7 @@ followed by a new line. The login file contains two lines
 `<email address>`
 `<password>`
 
-## Requirements:
+### Requirements:
 The following items need to be installed in order for the program to run.
 Selenium firefox driver can be found here: https://github.com/mozilla/geckodriver/releases
 Once this is downloaded:
@@ -18,6 +18,15 @@ Once this is downloaded:
 2. tar -xvf <file downloaded>
 3. mv geckodriver /usr/bin/
 ```
+
+### HOW TO USE
+```bash
+1. pip install -e .
+2. python setup.py build
+3. python setup.py install
+4. FrisbeeText -h
+```
+
 
 ### TO-DO:
 
@@ -29,11 +38,3 @@ Write tests (sorry Software Dev. Prof)
 If possible, have it send all into one conversation instead of separate numbers.
 Have to set up setuptools.py to install the dependencies listed above to make
 it more user friendly.
-
-### HOW TO USE
-```bash
-1. pip install -e .
-2. python setup.py build
-3. python setup.py install
-4. FrisbeeText -h
-```
