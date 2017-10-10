@@ -57,9 +57,9 @@ def sendOne(number, user, server, body):
         server.sendmail(user, getContact(number), body)
 
 
-def sendAll(numbers, user, server, body):
-    for n in numbers:
-        sendOne(n, user, server, body)
+def sendAll(contacts, user, server, body):
+    for n in contacts:
+        server.sendmail(user, n, body)
 
 def main():
     goToDir()
@@ -94,7 +94,7 @@ def main():
         sendOne(contact, user, server, body)
     else:
         logger.info("Sending mass message")
-        sendAll(getNumbers(), user, server, body)
+        sendAll(getContacts(), user, server, body)
     server.quit()
 
 
