@@ -11,10 +11,10 @@ class PostInstallCommand(install):
 		setup_mod.main()
 
 setup(
-	name="FrisbeeText",
-	version="0.0.1",
-	packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*",
-                                    "tests"]),
+	name='FrisbeeText',
+	version='0.0.1',
+	packages=find_packages(exclude=['*.tests', '*.tests.*', 'tests.*',
+                                    'tests']),
 	scripts=['setup_mod.py'],
 	cmdclass={
 		'install':PostInstallCommand
@@ -25,8 +25,8 @@ setup(
 			'FrisbeeText = main_mod:main',
 		]
 	},
-	author="Ilya Yudkovich",
-	author_email="yudkovich.i@husky.neu.edu",
+	author='Ilya Yudkovich',
+	author_email='yudkovich.i@husky.neu.edu',
 	description="Texting for Ultimate",
 	url='https://github.com/iyud/frisbee_text'
 )
