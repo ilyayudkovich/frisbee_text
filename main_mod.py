@@ -12,6 +12,11 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+def goToDir():
+    dir_path = os.path.dirname(os.path.realpath('main_mod.py'))
+    os.chdir(dir_path)
+    # do an assert here that we are in the right directory
+
 def getNumbers():
     numbers = []
     with open('./docs/numbers', 'r') as f:
@@ -66,6 +71,7 @@ def sendAll(numbers, user, server, body):
         sendOne(n, user, server, body)
 
 def main():
+    goToDir()
     logging.info("About to connect to server")
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
