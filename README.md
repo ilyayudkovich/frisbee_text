@@ -20,11 +20,13 @@ Once this is downloaded:
 ```
 
 ### HOW TO USE
+Note: Do this after cloning
 ```bash
-1. pip install -e .
-2. python setup.py build
-3. python setup.py install
-4. FrisbeeText -h
+1. cd frisbee_text
+2. pip install -e .
+3. python setup.py build
+4. python setup.py install
+5. FrisbeeText -h
 ```
 
 
