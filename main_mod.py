@@ -46,18 +46,14 @@ def getContact(phone):
             if phone in line:
                 return line
 
-def generateMsg(kind, time, loc):
-    wind, temp, clouds = getCurrentWTC('02115')
-    wind = "The wind speed is " + wind + "mph "
-    temp = "The temperature will be " + temp + "F "
-    clouds = "and " + clouds.lower()
-    message = temp + wind + clouds
+def generateMsg(kind, time, loc, message=None):
+    if not message:
+        wind, temp, clouds = getCurrentWTC('02115')
+        wind = "The wind speed is " + wind + "mph "
+        temp = "The temperature will be " + temp + "F "
+        clouds = "and " + clouds.lower()
+        message = temp + wind + clouds
     msg = """From: Northeastern Ultimate\nSubject: %s tn @ %s, %s\n%s""" % (kind, time, loc, message)
-
-    return msg
-
-def generateCancelMsg(kind, time, loc):
-    msg = """From: Northeastern Ultimate\nSubject: %s tn @ %s, %s\n%s""" % (kind, time, loc, "CANCELLED")
     return msg
 
 def sendOne(number, user, server, body):
@@ -88,7 +84,7 @@ def main():
 
     if results.cancelled:
         logger.info("Preparing cancelled message")
-        body = generateCancelMsg(results.kind, results.time, results.location)
+        body = generateMsg(results.kind, results.time, results.location, message='CANCELLED')
     else:
         logger.info("Preparing regular message")
         body = generateMsg(results.kind, results.time, results.location)
