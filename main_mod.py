@@ -62,7 +62,6 @@ def sendAll(contacts, user, server, body):
         server.sendmail(user, n, body)
 
 def main():
-    goToDir()
     logging.info("About to connect to server")
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
